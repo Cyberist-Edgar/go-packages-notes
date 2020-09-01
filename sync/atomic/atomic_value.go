@@ -4,28 +4,28 @@ package main
 
 import (
 	"fmt"
-	"sync/atomic"
 	"sync"
+	"sync/atomic"
 )
 
 var (
 	value atomic.Value
 )
 
-func changeValue(wg *sync.WaitGroup, m *sync.Mutex){
+func changeValue(wg *sync.WaitGroup, m *sync.Mutex) {
 	defer wg.Done()
 	// 使用下面的方式对value进行操作不会出现bug
 	// 如果只是使用value++，则输出的结果与预期不一致
-	for i:=0; i< 10000; i++{
+	for i := 0; i < 10000; i++ {
 		// 使用m来保证不会有其他的读写
 		m.Lock()
 		v := value.Load().(int)
-		value.Store(v +1)
+		value.Store(v + 1)
 		m.Unlock()
 	}
 }
 
-func main(){
+func main() {
 	fmt.Println(value)
 	value.Store(0)
 	var wg sync.WaitGroup
