@@ -40,3 +40,8 @@ return false
 ```
 
 <br />在sync/atomic中还定义了一个Value对象，该对象实现了Load和Store两个方法，其中Load方法返回一个interface{}结果，而Store方法接收一个interface{}参数，其使用方法也就类似上述的Load和Store类的方法
+
+### 示例代码
+[atomic.go](atomic.go) 
+
+[atomic_value.go](atomic_value.go)
