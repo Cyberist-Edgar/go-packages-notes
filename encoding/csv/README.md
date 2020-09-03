@@ -16,7 +16,15 @@ id, name, age
 
 ### 使用Reader进行读取操作
 package 中提供了NewReader的方法，可以返回一个Reader对象，从源码中我们可以看出构造出来的Reader的分隔符为`,`，当然我们可以修改，但是在大多数情况下并没有必要
-<img src="https://picb.zhimg.com/80/v2-af115b4889085f2491d5900cf2fae705_1440w.png">
+```go
+// NewReader returns a new Reader that reads from r.
+func NewReader(r io.Reader) *Reader {
+	return &Reader{
+		Comma: ',',
+		r:     bufio.NewReader(r),
+	}
+}
+```
 
 NewReader需要一个`io.Reader`类型的参数，常见的实现了该接口的类型有os.File、strings.Reader、bufio.Reader、bytes.Buffer、bytes.Reader，当然我们在该方法中使用最多的就是os.File了
 
@@ -27,10 +35,20 @@ NewReader需要一个`io.Reader`类型的参数，常见的实现了该接口的
 
 ### 使用Writer进行写操作
 package中提供了NewWriter方法可以构造一个Writer对象，从源码中可以看出，默认以`,`为分隔符
-<img src="https://pic2.zhimg.com/80/v2-406aa67cac056a66e8e7101470b56075_1440w.png">
+```go
+// NewWriter returns a new Writer that writes to w.
+func NewWriter(w io.Writer) *Writer {
+	return &Writer{
+		Comma: ',',
+		w:     bufio.NewWriter(w),
+	}
+}
+```
 NewWriter需要接收一个`io.Writer`类型的参数，常见实现了该接口的类型有os.File、strings.Writer、bufio.Writer、bytes.Buffer、bytes.Writer,在这里我们使用os.File
 
 然后调用Wirter对象的Write和WriteAll方法便可以写入数据，调用Flush方法可以将缓冲区的数据进入到文件中，调用Error方法可以返回Write和Flush执行时候遇到的问题
 
 ### 代码示例
 [csv_writer](csv_writer.go)
+
+[csv_reader](csv_reader.go)
