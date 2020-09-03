@@ -9,7 +9,27 @@
 该函数以路径为参数，如果该路径为绝对路径，那么返回true，如果不是返回false
 
 `func Abs(path string) (string, error)`
-<img src="https://pic2.zhimg.com/80/v2-e2b8b08e8c225d0ec172c35ed9b3cdd1_1440w.png">
+```go
+// Abs returns an absolute representation of path.
+// If the path is not absolute it will be joined with the current
+// working directory to turn it into an absolute path. The absolute
+// path name for a given file is not guaranteed to be unique.
+// Abs calls Clean on the result.
+func Abs(path string) (string, error) {
+	return abs(path)
+}
+
+func unixAbs(path string) (string, error) {
+	if IsAbs(path) {
+		return Clean(path), nil
+	}
+	wd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	return Join(wd, path), nil
+}
+```
 分析源码，我们知道如果输入路径时绝对路径，则对路径进行clean(见Clean函数)之后，返回，如果是相对路径，则会加上当前目录使之成为绝对路径，然后返回
 
 
@@ -41,8 +61,25 @@ ToSlash函数将path中的路径分隔符替换为斜杠（'/'）并返回替换
 `func VolumeName(path string) (v string)`
 
 VolumeName函数返回最前面的卷名。如Windows系统里提供参数"C:\foo\bar"会返回"C:"；Unix/linux系统的"\\host\share\foo"会返回"\\host\share"；其他平台会返回""。(文档中如是说，但是其实在源码中只有window下才会返回对应的卷名，其他的均为空字符串)
-<img src="https://pic1.zhimg.com/80/v2-68e88f6838e842563e480bcb0751ff15_1440w.png">
-<img src="https://pic2.zhimg.com/80/v2-e8da3505fa7327b4f01ae7423e122c39_1440w.png">
+
+path.go
+```go
+// VolumeName returns leading volume name.
+// Given "C:\foo\bar" it returns "C:" on Windows.
+// Given "\\host\share\foo" it returns "\\host\share".
+// On other platforms it returns "".
+func VolumeName(path string) string {
+	return path[:volumeNameLen(path)]
+}
+```
+path_unix.go
+```go
+// volumeNameLen returns length of the leading volume name on Windows.
+// It returns 0 elsewhere.
+func volumeNameLen(path string) int {
+	return 0
+}
+```
 
 `func Dir(path string) string`
 
@@ -96,7 +133,8 @@ Walk函数会遍历root指定的目录下的文件树，对每一个该文件树
 
 其中 WalkFunc类型为 func(path string, info os.FileInfo, err error) error
 
-示例代码
+## 示例代码
 
 [filepath_windows.go](filepath_windows.go)
+
 [filepath_unix.go](filepath_unix.go)
