@@ -10,7 +10,7 @@ PathEscape 函数可以转义字符串使其能够安全的放置在一个 URL �
 
 `func PathUnescape(s string) (string, error)`
 
-PathUnescape 是 PathEscape 的反变换，与 QueryUnescape 类型，但是 PathUnescape 不会将`+`转义成`""`(空格)
+PathUnescape 是 PathEscape 的反变换，与 QueryUnescape 类似，但是 PathUnescape 不会将`+`转义成`""`(空格)
 
 `func QueryEscape(s string) string`
 
