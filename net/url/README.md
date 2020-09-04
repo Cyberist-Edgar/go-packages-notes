@@ -141,7 +141,7 @@ Userinfo 是 URL 一个不可变的用户和密码的封装，现有的 Userinfo
 type Values map[string][]string
 ```
 
-Values 将一个值映射到一个切片，它通常被使用为查询参数和表单数据，不想 http.Header，Values 对大小写敏感
+Values 将一个值映射到一个切片，它通常被使用为查询参数和表单数据，不像 http.Header，Values 对大小写敏感
 
 `func ParseQuery(query string) (Values, error)`
 
